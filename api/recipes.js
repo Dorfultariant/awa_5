@@ -15,12 +15,11 @@ fs.readFile("./data/recipes.json", "utf-8", (err, data) => {
         return;
     }
     recipes = JSON.parse(data);
-    console.log("Loaded data");
+    console.log("Loaded data\n", recipes);
 });
 
-
-
-router.post("/", (req, res, next) => {
+router.post("/recipe/", (req, res, next) => {
+    console.log("Trying the recipe");
     Recipe.findOne({ name: req.body.name }, (err, recipe) => {
         if (err) {
             console.log("Found an error in post");
@@ -39,7 +38,24 @@ router.post("/", (req, res, next) => {
         else {
             return res.status(403).send("Already that recipe");
         }
-    })
+    });
+});
+
+router.get("/recipe/:id", (req, res, next) => {
+    Recipe.find({ name: req.params.id }, (err, recipe) => {
+        if (err) {
+            console.error("get error: ", err);
+            return next(err);
+        }
+        if (recipe) {
+            console.log(recipe);
+            res.status(200).json(recipe);
+        }
+        else {
+            console.log("Recipe not found");
+            res.status(200).json({ msg: "No recipe found" });
+        }
+    });
 });
 
 module.exports = router;

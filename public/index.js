@@ -6,9 +6,6 @@ let listOfIngredients = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    // Populate index.html with default stuff
-    sendData("get", "Pizza");
-
     const recName = document.getElementById("name-text");
 
     const ingredientTextArea = document.getElementById("ingredients-text");
