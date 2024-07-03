@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+
+    <title>Recipes</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo center">Logo</a>
+            <ul id="nav-mobile" class="left hide-on-med-and-down">
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="col">
+            <h1>Recipes</h1>
+
+            <input type="text" id="name-text" placeholder="Recipe">
+            <h4>Ingredients</h4>
+            <textarea id="ingredients-text" placeholder="Your ingredients..."></textarea>
+            <button class="btn" id="add-ingredient" type="button">Add ingredient</button>
+            <h4>instructions</h4>
+            <textarea id="instructions-text" placeholder="Your orders..."></textarea>
+            <button class="btn" id="add-instruction" type="button">Add instruction</button>
+            <input id="image-input" type="file" accept="image/*" multiple>
+            <button class="btn" id="submit" type="submit">Submit</button>
+        </div>
+
+        <div class="col">
+            <ul id="list">
+
+            </ul>
+        </div>
+
+    </div>
+
+    <script src="index.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+</body>
+
+</html>
