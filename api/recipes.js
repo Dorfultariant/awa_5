@@ -34,7 +34,7 @@ router.get("/", (req, res, next) => {
 // Adding recipe
 router.post("/recipe/", (req, res, next) => {
     console.log("Trying the recipe");
-    Recipe.findOne({ name: req.body.name }, (err, recipe) => {
+    Recipe.find({ name: req.body.name }, (err, recipe) => {
         if (err) {
             console.log("Found an error in post");
             return next(err);
