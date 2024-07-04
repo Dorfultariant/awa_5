@@ -4,7 +4,7 @@ let listOfInstructions = [];
 let listOfIngredients = [];
 let selected_cats = {};
 
-let cats = [];
+let cats;
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -150,8 +150,7 @@ async function getCategories() {
         });
 
         if (res.status === "200") {
-            const data = await res.json();
-            cats.push(data);
+            cats = await res.json();
             console.log(cats);
         }
     } catch (err) {
