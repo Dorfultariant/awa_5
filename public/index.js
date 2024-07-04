@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const submitBtn = document.getElementById("submit");
 
 
-
     // Add ingredients to a list
     addIngredientBtn.addEventListener("click", async () => {
         listOfIngredients.push(ingredientTextArea.value);
@@ -43,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // Send data to server
-        sendData("post", recName.value);
+        sendRecipeData(recName.value);
         //sendImgData(imgData);
 
         // Clear temp lists
@@ -71,55 +70,61 @@ async function sendImgData(imgData) {
     }
 }
 
-async function sendData(method, foodName) {
+async function sendRecipeData(name) {
     try {
-        let res;
-        const ingredientList = document.getElementById("list");
-        if (method === "get") {
-            res = await fetch(`/recipe/${foodName}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+        const resBody = JSON.stringify({
+            name: name,
+            instructions: listOfInstructions,
+            ingredients: listOfIngredients
+        });
 
-        } else if (method === "post") {
+        const res = await fetch(`/api/recipes/recipe/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: resBody,
+        });
 
-            const resBody = JSON.stringify({
-                name: foodName,
-                instructions: listOfInstructions,
-                ingredients: listOfIngredients
-            });
-
-            res = await fetch(`/recipe/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: resBody,
-            });
-
-        }
-
-        // Data is added to the frontend from response json
         if (res.ok) {
             const data = await res.json();
+
+            // debug print
             console.log(data);
 
-            const recName = document.createElement("h2");
-            const instrcution = document.createElement("p");
-            const ingredients = document.createElement("p");
-
-            recName.textContent = data.name;
-            instrcution.textContent = data.instructions;
-            ingredients.textContent = data.ingredients;
-
-            ingredientList.appendChild(recName);
-            ingredientList.appendChild(instrcution);
-            ingredientList.appendChild(ingredients);
+            createRecipeView(data);
         }
 
     } catch (error) {
         console.error("Error produced: ", error);
     }
+}
+
+
+// Creates the list view for recipes fetched from db
+function createRecipeView(data) {
+    const recipelist = document.getElementById("list");
+    const li = document.createElement("li");
+    const name_field = document.createElement("h2");
+    const instructions = document.createElement("ul");
+    const ingredients = document.createElement("ul");
+
+    name_field.textContent = data.name;
+
+    for (const inst of data.instructions) {
+        const new_li = document.createElement("li");
+        new_li.textContent = inst;
+        instructions.appendChild(new_li);
+    }
+
+    for (const ingr of data.ingredients) {
+        const new_li = document.createElement("li");
+        new_li.textContent = ingr;
+        ingredients.appendChild(new_li);
+    }
+
+    li.appendChild(name_field);
+    li.appendChild(instructions);
+    li.appendChild(ingredients);
+    recipelist.appendChild(li);
 }
