@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const submitBtn = document.getElementById("submit");
 
-    const searchField = document.getElementById("seacrh-field");
+    const searchField = document.getElementById("search-field");
 
     // Add ingredients to a list
     addIngredientBtn.addEventListener("click", async () => {
