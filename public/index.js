@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const submitBtn = document.getElementById("submit");
 
+    const searchField = document.getElementById("seach-field");
 
     // Add ingredients to a list
     addIngredientBtn.addEventListener("click", async () => {
@@ -50,6 +51,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         listOfInstructions = [];
     });
 
+    searchField.addEventListener("click", async () => {
+        sendSearchReq(searchField.value);
+    })
+
 });
 
 async function sendImgData(imgData) {
@@ -69,6 +74,28 @@ async function sendImgData(imgData) {
         console.error("Error: ", error);
     }
 }
+
+async function sendSearchReq(name) {
+    try {
+        const res = await fetch(`/api/recipes/recipe/${name}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            createRecipeView(data);
+        }
+        else {
+            console.log("nothing found");
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 
 async function sendRecipeData(name) {
     try {

@@ -21,21 +21,6 @@ db.on("error", console.error.bind(console, "Oh no! MongoDB connection error: "))
 
 server.use("/api/recipes", require("./api/recipes.js"));
 
-server.post("/recipe/", function(req, res, next) {
-    try {
-        const recipe = {
-            "name": req.body.name,
-            "ingredients": req.body.ingredients,
-            "instructions": req.body.instructions
-        };
-
-        res.status(200).json(recipe);
-    } catch (error) {
-        console.error("Error produced from recipe path: ", error);
-    }
-
-});
-
 
 server.listen(process.env.PORT, () => {
     console.log(`Server is listening on port ${process.env.PORT}...`);

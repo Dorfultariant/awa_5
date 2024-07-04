@@ -46,45 +46,22 @@ router.post("/recipe/", async (req, res, next) => {
     }
 });
 
-/*
-router.post("/recipe/", (req, res, next) => {
-    console.log("Trying the recipe");
-    Recipe.find({ name: req.body.name }, function(err, recipe) {
-        if (err) {
-            console.log("Found an error in post");
-            return next(err);
-        }
-        if (!recipe) {
-            new Recipe({
-                name: req.body.name,
-                instructions: req.body.instructions,
-                ingredients: req.body.ingredients
-            }).save((err) => {
-                if (err) return next(err);
-                return res.send(req.body);
-            });
-        }
-        else {
-            return res.status(403).send("Already that recipe");
-        }
-    });
-});*/
 
 router.get("/recipe/:id", (req, res, next) => {
-    Recipe.find({ name: req.params.id }, (err, recipe) => {
-        if (err) {
-            console.error("get error: ", err);
-            return next(err);
-        }
+    try {
+        const recipe = Recipe.find({ name: req.params.id });
+
         if (recipe) {
-            console.log(recipe);
-            res.status(200).json(recipe);
+            return res.status(200).json(recipe);
         }
         else {
             console.log("Recipe not found");
-            res.status(200).json({ msg: "No recipe found" });
+            return res.status(200).send("No recipe found");
         }
-    });
+    } catch (err) {
+        console.error(err);
+        return res.status(404).send("Something went wrong");
+    }
 });
 
 module.exports = router;
