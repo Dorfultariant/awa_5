@@ -18,6 +18,20 @@ fs.readFile("./data/recipes.json", "utf-8", (err, data) => {
     console.log("Loaded data\n", recipes);
 });
 
+
+// Default
+router.get("/", (req, res, next) => {
+    Recipe.find({}, (err, recipe) => {
+        if (err) {
+            res.status(403).json({});
+            return next(err);
+        }
+        res.status(200).json(recipe);
+
+    });
+});
+
+// Adding recipe
 router.post("/recipe/", (req, res, next) => {
     console.log("Trying the recipe");
     Recipe.findOne({ name: req.body.name }, (err, recipe) => {

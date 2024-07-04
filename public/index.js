@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Send data to server
         sendData("post", recName.value);
-        sendImgData(imgData);
+        //sendImgData(imgData);
 
         // Clear temp lists
         listOfIngredients = [];
