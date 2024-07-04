@@ -4,7 +4,7 @@ const path = require("path");
 const dotenv = require("dotenv").config();
 
 
-const mongoDB = process.env.MONGO_URL;
+const mongoDB = "mongodb://127.0.0.1:27017/testdb";
 mongoose.connect(mongoDB);
 
 mongoose.Promise = Promise;
