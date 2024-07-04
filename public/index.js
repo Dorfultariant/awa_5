@@ -2,7 +2,9 @@
 // Lists for storing temp data:
 let listOfInstructions = [];
 let listOfIngredients = [];
+let selected_cats = {};
 
+let cats = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -18,6 +20,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const submitBtn = document.getElementById("submit");
 
+    // fetch categories
+    getCategories();
+
+    // display the categories
+    createCategoriesView(cats);
 
     // Add ingredients to a list
     addIngredientBtn.addEventListener("click", async () => {
@@ -60,6 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
 });
+
 
 async function sendImgData(imgData) {
     try {
@@ -106,7 +114,8 @@ async function sendRecipeData(name) {
         const resBody = JSON.stringify({
             name: name,
             instructions: listOfInstructions,
-            ingredients: listOfIngredients
+            ingredients: listOfIngredients,
+            categories: selected_cats
         });
 
         const res = await fetch(`/api/recipes/recipe/`, {
@@ -131,6 +140,54 @@ async function sendRecipeData(name) {
     }
 }
 
+async function getCategories() {
+    try {
+        const res = await fetch("/api/recipes/categories/", {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        if (res.status === "200") {
+            const data = await res.json();
+            cats.push(data);
+            console.log(cats);
+        }
+    } catch (err) {
+        console.log("Error while fetching categories: ", err);
+    }
+}
+
+function createCategoriesView(data) {
+    const categories_div = document.getElementById("categories");
+
+    for (const c of data.categories) {
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.id = `cat-${c.id}`;
+        cb.value = c.name;
+        cb.addEventListener("click", () => toggleCat(c.id));
+
+        const label = document.createElement("label");
+        label.textContent = c;
+        label.htmlFor = `diet-${c}`;
+
+        categories_div.appendChild(cb);
+        categories_div.appendChild(label);
+    }
+}
+
+function toggleCat(cat_id) {
+    if (!selected_cats.includes(cat_id)) {
+        selected_cats.push(cat_id);
+    } else {
+        const idx = selected_cats.indexOf(cat_id);
+        if (idx !== -1) {
+            selected_cats.splice(idx, 1);
+        }
+    }
+}
 
 // Creates the list view for recipes fetched from db
 function createRecipeView(data) {
@@ -139,6 +196,7 @@ function createRecipeView(data) {
     const name_field = document.createElement("h2");
     const instructions = document.createElement("ul");
     const ingredients = document.createElement("ul");
+    const categories = document.createElement("p");
 
     name_field.textContent = data.name;
 
@@ -154,8 +212,14 @@ function createRecipeView(data) {
         ingredients.appendChild(new_li);
     }
 
+    for (const c of data.categories) {
+        categories.textContent += `, ${c.name}`;
+    }
+
     li.appendChild(name_field);
+    li.appendChild(categories);
     li.appendChild(instructions);
     li.appendChild(ingredients);
+
     recipelist.appendChild(li);
 }
