@@ -161,7 +161,7 @@ async function getCategories() {
 function createCategoriesView(data) {
     const categories_div = document.getElementById("categories");
 
-    for (const c of data.categories) {
+    for (const c of data) {
         const cb = document.createElement("input");
         cb.type = "checkbox";
         cb.id = `cat-${c.id}`;
