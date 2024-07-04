@@ -59,7 +59,7 @@ router.get("/recipe/:id", (req, res, next) => {
             return res.status(200).send("No recipe found");
         }
     } catch (err) {
-        console.error(err);
+        console.error("Failure while finding: ", err);
         return res.status(404).send("Something went wrong");
     }
 });

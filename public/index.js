@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const submitBtn = document.getElementById("submit");
 
-    const searchField = document.getElementById("search-field");
 
     // Add ingredients to a list
     addIngredientBtn.addEventListener("click", async () => {
@@ -51,9 +50,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         listOfInstructions = [];
     });
 
-    searchField.addEventListener("click", async () => {
-        sendSearchReq(searchField.value);
-    })
+    const searchField = document.getElementById("search-field");
+    searchField.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter") {
+            console.log(searchField.value);
+            sendSearchReq(searchField.value);
+        };
+    });
 
 });
 
