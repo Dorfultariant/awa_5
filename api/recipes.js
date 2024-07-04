@@ -3,6 +3,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Recipe = require("../model/Recipe");
+const Category = require("../model/Category");
 const router = express.Router();
 const fs = require("fs");
 
