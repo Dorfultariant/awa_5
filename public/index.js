@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         listOfInstructions = [];
     });
 
+    // https://www.w3schools.com/howto/howto_js_trigger_button_enter.asp
     const searchField = document.getElementById("search-field");
     searchField.addEventListener("keydown", async (e) => {
         if (e.key === "Enter") {
