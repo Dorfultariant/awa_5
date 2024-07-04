@@ -47,9 +47,9 @@ router.post("/recipe/", async (req, res, next) => {
 });
 
 
-router.get("/recipe/:id", (req, res, next) => {
+router.get("/recipe/:id", async (req, res, next) => {
     try {
-        const recipe = Recipe.findOne({ name: req.params.id });
+        const recipe = await Recipe.findOne({ name: req.params.id }).lean();
 
         if (recipe) {
             return res.status(200).json(recipe);
