@@ -17,6 +17,9 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 
 db.on("error", console.error.bind(console, "Oh no! MongoDB connection error: "));
+db.on("connected", () => {
+    console.log("MongoDB connected...");
+});
 
 
 server.use("/api/recipes", require("./api/recipes.js"));

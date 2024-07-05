@@ -23,6 +23,9 @@ fs.readFile("./data/recipes.json", "utf-8", (err, data) => {
 
 // Load category information
 fs.readFile("./data/categories.json", "utf-8", (err, data) => {
+
+    Category.create({ name: "Vegan" });
+    Category.create({ name: "Carnivore" });
     if (err) {
         console.error("Something wrong with db:", err);
         return;
@@ -33,7 +36,9 @@ fs.readFile("./data/categories.json", "utf-8", (err, data) => {
 
 
 // Default
-router.get("/", (req, res, next) => {
+router.get("/", (req, res, next) => {/*
+    Category.create({ name: "Vegan" });
+    Category.create({ name: "Carnivore" });*/
     return res.status(200).send("Hello Hello");
 });
 
@@ -41,11 +46,11 @@ router.get("/", (req, res, next) => {
 router.get("/categories/", async (req, res, next) => {
     try {
         const cats = await Category.find({});
+        console.log("Here are the cats", cats);
         return res.status(200).json(cats);
     } catch (err) {
         console.error("Error: ", err);
         return res.status(404).send("No categories found.");
-
     }
 });
 
@@ -57,6 +62,8 @@ router.post("/recipe/", async (req, res, next) => {
             return res.status(403).send("Recipe exists already");
         }
 
+        // const catIDS = await Category.find({ name: { $in: req.body.categories } }, "_id");
+
         const recipe_json = {
             name: req.body.name,
             instructions: req.body.instructions,
@@ -64,12 +71,7 @@ router.post("/recipe/", async (req, res, next) => {
             categories: req.body.categories
         }
 
-        const newRecipe = await Recipe.create({
-            name: req.body.name,
-            instructions: req.body.instructions,
-            ingredients: req.body.ingredients,
-            categories: req.body.categories
-        });
+        const newRecipe = await Recipe.create(recipe_json);
 
         return res.status(200).json(newRecipe);
     }

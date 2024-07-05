@@ -2,7 +2,7 @@
 // Lists for storing temp data:
 let listOfInstructions = [];
 let listOfIngredients = [];
-let selected_cats = {};
+let selected_cats = [];
 
 let cats;
 
@@ -23,8 +23,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // fetch categories
     getCategories();
 
-    // display the categories
-    createCategoriesView(cats);
 
     // Add ingredients to a list
     addIngredientBtn.addEventListener("click", async () => {
@@ -61,7 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const searchField = document.getElementById("search-field");
     searchField.addEventListener("keydown", async (e) => {
         if (e.key === "Enter") {
-            console.log(searchField.value);
             sendSearchReq(searchField.value);
         };
     });
@@ -129,9 +126,6 @@ async function sendRecipeData(name) {
         if (res.ok) {
             const data = await res.json();
 
-            // debug print
-            console.log(data);
-
             createRecipeView(data);
         }
 
@@ -149,9 +143,11 @@ async function getCategories() {
             }
         });
 
-        if (res.status === "200") {
+        if (res.ok) {
             cats = await res.json();
-            console.log(cats);
+
+            // display the categories
+            createCategoriesView(cats);
         }
     } catch (err) {
         console.log("Error while fetching categories: ", err);
@@ -159,29 +155,44 @@ async function getCategories() {
 }
 
 function createCategoriesView(data) {
-    const categories_div = document.getElementById("categories");
+    const categories_ul = document.getElementById("categories");
 
-    for (const c of data) {
+    cats.forEach((cat) => {
+        const li = document.createElement("li");
         const cb = document.createElement("input");
         cb.type = "checkbox";
-        cb.id = `cat-${c.id}`;
-        cb.value = c.name;
-        cb.addEventListener("click", () => toggleCat(c.id));
+        cb.id = cat._id;
+        cb.value = cat._id;
 
         const label = document.createElement("label");
-        label.textContent = c;
-        label.htmlFor = `diet-${c}`;
+        label.htmlFor = cat._id;
+        label.textContent = cat.name;
 
-        categories_div.appendChild(cb);
-        categories_div.appendChild(label);
-    }
+        li.appendChild(cb);
+        li.appendChild(label);
+        categories_ul.appendChild(li);
+    });
+
+    cbEventListeners();
 }
 
-function toggleCat(cat_id) {
-    if (!selected_cats.includes(cat_id)) {
-        selected_cats.push(cat_id);
+function cbEventListeners() {
+    // Fetch all checkboxes
+    const cbs = document.querySelectorAll("input[type='checkbox']");
+
+    // Event listeners and toggle
+    cbs.forEach((cb) => {
+        cb.addEventListener("change", toggleCat);
+    });
+}
+
+// https://stackoverflow.com/questions/13330202/how-to-create-list-of-checkboxes-dynamically-with-javascript
+function toggleCat(event) {
+    const cb = event.target;
+    if (cb.checked) {
+        selected_cats.push(cb.value);
     } else {
-        const idx = selected_cats.indexOf(cat_id);
+        const idx = selected_cats.indexOf(cb.value);
         if (idx !== -1) {
             selected_cats.splice(idx, 1);
         }
@@ -212,7 +223,7 @@ function createRecipeView(data) {
     }
 
     for (const c of data.categories) {
-        categories.textContent += `, ${c.name}`;
+        categories.textContent += `${c} `;
     }
 
     li.appendChild(name_field);
